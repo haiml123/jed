@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   @default("TEACHER")
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lessonProgress  LessonProgress[]
+  reflections     Reflection[]
+  directedGroups  Group[]            @relation("DirectorGroups")
+  groupMembers    GroupMember[]
+  assignedLessons LessonAssignment[] @relation("AssignedToUser")
+  createdAssignments LessonAssignment[] @relation("AssignedByUser")
+
+  @@index([email])
+  @@index([role])
+}
+
+model Lesson {
+  id            String   @id @default(cuid())
+  title         String
+  description   String   @default("")
+  videoUrl      String?
+  videoDuration Int      @default(0)
+  thumbnailUrl  String?
+  isMandatory   Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  units       Unit[]
+  assignments LessonAssignment[]
+
+  @@index([order])
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @default("")
+  order       Int      @default(0)
+  lessonId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lesson         Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  keyTakeaways   KeyTakeaway[]
+  quizQuestions  QuizQuestion[]
+  lessonProgress LessonProgress[]
+  reflections    Reflection[]
+
+  @@index([lessonId])
+  @@index([order])
+}
+
+model KeyTakeaway {
+  id     String @id @default(cuid())
+  text   String
+  order  Int    @default(0)
+  unitId String
+
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@index([unitId])
+}
+
+model QuizQuestion {
+  id      String @id @default(cuid())
+  text    String
+  order   Int    @default(0)
+  unitId  String
+  xpValue Int    @default(10)
+
+  unit    Unit         @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  options QuizOption[]
+
+  @@index([unitId])
+}
+
+model QuizOption {
+  id         String  @id @default(cuid())
+  text       String
+  isCorrect  Boolean @default(false)
+  questionId String
+
+  question QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+}
+
+model LessonProgress {
+  id                   String    @id @default(cuid())
+  userId               String
+  unitId               String
+  videoWatchPercent     Float     @default(0)
+  videoCompleted       Boolean   @default(false)
+  exitTicketResponse   String?
+  exitTicketSubmitted  Boolean   @default(false)
+  quizScore            Int?
+  quizCompleted        Boolean   @default(false)
+  xpEarned             Int       @default(0)
+  completedAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, unitId])
+  @@index([userId])
+  @@index([unitId])
+}
+
+model Reflection {
+  id                  String   @id @default(cuid())
+  userId              String
+  unitId              String
+  content             String
+  sharedWithDirector  Boolean  @default(false)
+  createdAt           DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([unitId])
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  directorId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  director    User               @relation("DirectorGroups", fields: [directorId], references: [id], onDelete: Cascade)
+  members     GroupMember[]
+  assignments LessonAssignment[]
+
+  @@index([directorId])
+}
+
+model GroupMember {
+  id       String   @id @default(cuid())
+  groupId  String
+  userId   String
+  joinedAt DateTime @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+}
+
+model LessonAssignment {
+  id           String    @id @default(cuid())
+  lessonId     String
+  groupId      String?
+  userId       String?
+  assignedById String
+  dueDate      DateTime?
+  createdAt    DateTime  @default(now())
+
+  lesson     Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  group      Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user       User?   @relation("AssignedToUser", fields: [userId], references: [id], onDelete: Cascade)
+  assignedBy User   @relation("AssignedByUser", fields: [assignedById], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+  @@index([groupId])
+  @@index([userId])
+  @@index([assignedById])
+}

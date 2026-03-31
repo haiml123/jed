@@ -1,0 +1,16 @@
+node_modules
+dist
+.next
+.env
+.env.local
+*.js.map
+*.d.ts
+!jest.config.js
+.DS_Store
+.idea
+coverage
+.turbo
+package-lock.json
+*.db
+figma/figma-raw.json
+claude_desktop_config.json

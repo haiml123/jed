@@ -26,7 +26,7 @@ export default function ProfilePage() {
   const userName = user?.email?.split('@')[0] || user?.name || 'Teacher';
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <PageHeader label="PROFILE" title="Teacher Profile" />
 
       <div className="space-y-4 max-w-[1139px]">

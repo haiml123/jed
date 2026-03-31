@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Sidebar from './sidebar';
+import MobileNav from './mobile-nav';
 import PawBackground from '@/components/ui/paw-background';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -25,11 +26,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-surface">
-      <Sidebar />
-      <main className="flex-1 overflow-auto relative">
+      {/* Sidebar: hidden on mobile, visible on md+ */}
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
+
+      <main className="flex-1 overflow-auto relative pb-16 md:pb-0">
         <PawBackground />
         <div className="relative z-10">{children}</div>
       </main>
+
+      {/* Bottom nav: visible on mobile, hidden on md+ */}
+      <MobileNav />
     </div>
   );
 }

@@ -67,7 +67,7 @@ export default function HomePage() {
 
   /* ================================================================ */
   return (
-    <div className="px-8 py-6 max-w-[1200px]">
+    <div className="px-4 py-4 md:px-8 md:py-6 max-w-[1200px]">
       {/* ---------------------------------------------------------- */}
       {/* 1. Page Header                                              */}
       {/* ---------------------------------------------------------- */}
@@ -76,13 +76,13 @@ export default function HomePage() {
       {/* ---------------------------------------------------------- */}
       {/* 2. Hero Welcome Card                                        */}
       {/* ---------------------------------------------------------- */}
-      <section className="bg-[#00609b] rounded-[32px] px-10 py-9 flex items-center justify-between mb-1 overflow-hidden relative">
+      <section className="bg-[#00609b] rounded-[32px] px-5 py-6 md:px-10 md:py-9 flex flex-col md:flex-row items-center justify-between mb-1 overflow-hidden relative gap-6 md:gap-0">
         {/* Left content */}
         <div className="max-w-[480px] space-y-4 z-10">
           <p className="text-[11px] font-bold text-[#d0e4ff] tracking-[0.12em] uppercase">
             Welcome back, {userName}
           </p>
-          <h2 className="font-heading text-[35px] font-extrabold text-white leading-[1.15]">
+          <h2 className="font-heading text-xl md:text-[35px] font-extrabold text-white leading-[1.15]">
             JEd is ready for your
             <br />
             next breakthrough.
@@ -125,7 +125,7 @@ export default function HomePage() {
       {/* ---------------------------------------------------------- */}
       {/* 3. Stat Cards Row                                           */}
       {/* ---------------------------------------------------------- */}
-      <section className="grid grid-cols-3 gap-5 mb-8">
+      <section className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
         <StatCard
           label="Total XP"
           value={xp.toLocaleString()}
@@ -166,14 +166,14 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="bg-[#f1f4fb] rounded-[32px] p-8 flex items-center gap-8">
+          <div className="bg-[#f1f4fb] rounded-[32px] p-4 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
             {/* Lesson cover image */}
             <Image
               src="/assets/lessons/classroom-management.png"
               alt="Lesson cover"
               width={278}
               height={209}
-              className="rounded-[14px] object-cover flex-shrink-0"
+              className="rounded-[14px] object-cover flex-shrink-0 w-full md:w-[278px] h-auto md:h-[209px]"
             />
 
             {/* Lesson details */}
@@ -190,7 +190,7 @@ export default function HomePage() {
               </div>
 
               {/* Title & description */}
-              <h3 className="font-heading text-[32px] font-extrabold text-[#181c21] leading-tight">
+              <h3 className="font-heading text-xl md:text-[32px] font-extrabold text-[#181c21] leading-tight">
                 {currentLesson.title}
               </h3>
               <p className="text-[15px] text-[#404751] leading-relaxed">
@@ -231,7 +231,7 @@ export default function HomePage() {
       {/* ---------------------------------------------------------- */}
       {/* 5. Achievements & Milestones                                */}
       {/* ---------------------------------------------------------- */}
-      <section className="grid grid-cols-2 gap-5">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Recent Achievements */}
         <div>
           <h4 className="font-heading text-[17px] font-bold text-[#181c21] mb-3">

@@ -41,11 +41,11 @@ export default function ProgressPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       <PageHeader label="MY PROGRESS" title="Progress Overview" />
 
       {/* Header row: mascot + speech bubble | progress summary */}
-      <div className="flex gap-6 mb-8">
+      <div className="flex flex-col md:flex-row gap-6 mb-8">
         {/* Left: Mascot + greeting */}
         <div className="flex items-start gap-3 flex-1">
           <Image
@@ -63,7 +63,7 @@ export default function ProgressPage() {
         </div>
 
         {/* Right: Progress summary card */}
-        <div className="bg-[#f1f4fb] rounded-[32px] p-6 w-[299px] flex-shrink-0">
+        <div className="bg-[#f1f4fb] rounded-[32px] p-6 w-full md:w-[299px] md:flex-shrink-0">
           <p className="text-[30px] font-extrabold text-[#00609b] font-heading leading-none">{progressPct}%</p>
           <p className="text-sm text-[#707882] mt-1 mb-3 uppercase tracking-wide">Current Status</p>
           <div className="w-48 bg-[#dfe2e9] rounded-full h-2 mb-4">
@@ -86,7 +86,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Main content: Mandatory lessons + Optional sidebar */}
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Left: Mandatory Lessons */}
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-5">
@@ -196,7 +196,7 @@ export default function ProgressPage() {
         </div>
 
         {/* Right sidebar: Optional Lessons */}
-        <div className="w-[374px] flex-shrink-0">
+        <div className="w-full lg:w-[374px] lg:flex-shrink-0">
           <div className="bg-[#b548af] rounded-[32px] p-6">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles size={18} className="text-white" />

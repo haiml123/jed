@@ -42,8 +42,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left side - Branding with paw prints and dog image */}
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Mobile branding header */}
+      <div className="lg:hidden bg-[#f5f8ff] relative overflow-hidden py-8 flex flex-col items-center">
+        <PawBackground />
+        <div className="relative z-10 flex flex-col items-center">
+          <Image src="/assets/shared/jed-logo.png" alt="JED" width={76} height={71} />
+          <p className="font-heading text-sm font-extrabold text-[#0079c2] mt-2">Learning that connects</p>
+        </div>
+      </div>
+
+      {/* Left side - Desktop Branding with paw prints and dog image */}
       <div className="flex-1 hidden lg:flex flex-col relative overflow-hidden bg-[#f5f8ff]">
         <PawBackground />
 
@@ -70,7 +79,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex items-center justify-center bg-white">
+      <div className="flex-1 flex items-center justify-center bg-white px-5 py-8 lg:px-0 lg:py-0">
         <div className="w-[380px] space-y-8">
           {/* Logo */}
           <Image

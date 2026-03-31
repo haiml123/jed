@@ -11,9 +11,11 @@
     "db:generate": "cd packages/database && npx prisma generate",
     "db:push": "cd packages/database && npx prisma db push",
     "db:seed": "cd packages/database && npx ts-node src/seed.ts",
-    "install:all": "npm install && cd packages/database && npm install && cd ../../packages/shared && npm install && cd ../../apps/api && npm install && cd ../../apps/web && npm install"
+    "install:all": "npm install && cd packages/database && npm install && cd ../../packages/shared && npm install && cd ../../apps/api && npm install && cd ../../apps/web && npm install",
+    "test:e2e": "npx playwright test --config=tests/e2e/playwright.config.ts"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "concurrently": "^8.2.2",
     "typescript": "^5.5.3"
   }

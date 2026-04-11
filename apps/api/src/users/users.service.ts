@@ -1,20 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
+
+const USER_PUBLIC = {
+  id: true,
+  email: true,
+  name: true,
+  role: true,
+  avatarUrl: true,
+  school: true,
+  lastLoginAt: true,
+  createdAt: true,
+} as const;
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.user.findMany({
-      select: { id: true, email: true, name: true, role: true, avatarUrl: true, createdAt: true },
-    });
+    return this.prisma.user.findMany({ select: USER_PUBLIC });
   }
 
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, email: true, name: true, role: true, avatarUrl: true, createdAt: true },
+      select: USER_PUBLIC,
     });
     if (!user) throw new NotFoundException('User not found');
     return user;
@@ -23,15 +33,41 @@ export class UsersService {
   async findByRole(role: string) {
     return this.prisma.user.findMany({
       where: { role: role as any },
-      select: { id: true, email: true, name: true, role: true, avatarUrl: true, createdAt: true },
+      select: USER_PUBLIC,
     });
   }
 
-  async update(id: string, data: { name?: string; avatarUrl?: string }) {
+  async create(data: {
+    name: string;
+    email: string;
+    password?: string;
+    school?: string;
+    role?: 'TEACHER' | 'DIRECTOR' | 'ADMIN';
+  }) {
+    const existing = await this.prisma.user.findUnique({ where: { email: data.email } });
+    if (existing) throw new BadRequestException('Email already registered');
+    const password = data.password || 'password123';
+    const hashed = await bcrypt.hash(password, 10);
+    return this.prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        password: hashed,
+        school: data.school,
+        role: data.role || 'TEACHER',
+      },
+      select: USER_PUBLIC,
+    });
+  }
+
+  async update(
+    id: string,
+    data: { name?: string; email?: string; school?: string; role?: 'TEACHER' | 'DIRECTOR' | 'ADMIN'; avatarUrl?: string },
+  ) {
     return this.prisma.user.update({
       where: { id },
       data,
-      select: { id: true, email: true, name: true, role: true, avatarUrl: true },
+      select: USER_PUBLIC,
     });
   }
 

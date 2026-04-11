@@ -17,10 +17,23 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    // Track last login for the weekly engagement formula (20% weight on logins)
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() },
+    });
+
     const token = this.jwt.sign({ sub: user.id, email: user.email, role: user.role });
     return {
       access_token: token,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role, avatarUrl: user.avatarUrl },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        avatarUrl: user.avatarUrl,
+        school: user.school,
+      },
     };
   }
 
@@ -43,7 +56,15 @@ export class AuthService {
   async getProfile(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, name: true, role: true, avatarUrl: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        school: true,
+        createdAt: true,
+      },
     });
     if (!user) throw new UnauthorizedException('User not found');
     return user;

@@ -37,11 +37,36 @@ export class LessonsService {
     return lesson;
   }
 
-  async create(data: { title: string; description?: string; videoUrl?: string; videoDuration?: number; thumbnailUrl?: string; isMandatory?: boolean; order?: number }) {
+  async create(data: {
+    title: string;
+    topic?: string;
+    description?: string;
+    videoUrl?: string;
+    videoDuration?: number;
+    thumbnailUrl?: string;
+    isMandatory?: boolean;
+    isOptional?: boolean;
+    status?: string;
+    order?: number;
+  }) {
     return this.prisma.lesson.create({ data });
   }
 
-  async update(id: string, data: any) {
+  async update(
+    id: string,
+    data: {
+      title?: string;
+      topic?: string;
+      description?: string;
+      videoUrl?: string;
+      videoDuration?: number;
+      thumbnailUrl?: string;
+      isMandatory?: boolean;
+      isOptional?: boolean;
+      status?: string;
+      order?: number;
+    },
+  ) {
     return this.prisma.lesson.update({ where: { id }, data });
   }
 

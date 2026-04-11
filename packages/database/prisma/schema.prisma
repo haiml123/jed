@@ -15,14 +15,16 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      Role     @default(TEACHER)
-  avatarUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  password    String
+  role        Role     @default(TEACHER)
+  avatarUrl   String?
+  school      String?  // e.g. "JKG Academy", "North Hill Campus"
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   lessonProgress  LessonProgress[]
   reflections     Reflection[]
@@ -38,11 +40,14 @@ model User {
 model Lesson {
   id            String   @id @default(cuid())
   title         String
+  topic         String   @default("") // e.g. "Classroom Management"
   description   String   @default("")
   videoUrl      String?
   videoDuration Int      @default(0)
   thumbnailUrl  String?
   isMandatory   Boolean  @default(false)
+  isOptional    Boolean  @default(false) // A lesson can be BOTH mandatory AND optional
+  status        String   @default("PUBLISHED") // "PUBLISHED" | "DRAFT"
   order         Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

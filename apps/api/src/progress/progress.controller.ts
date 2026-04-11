@@ -17,6 +17,11 @@ export class ProgressController {
     return this.progress.getTotalXp(req.user.sub);
   }
 
+  @Get('weekly-engagement')
+  getWeeklyEngagement(@Request() req: any) {
+    return this.progress.getWeeklyEngagement(req.user.sub);
+  }
+
   @Post('video')
   updateVideo(@Request() req: any, @Body() body: { unitId: string; watchPercent: number }) {
     return this.progress.updateVideoProgress(req.user.sub, body.unitId, body.watchPercent);

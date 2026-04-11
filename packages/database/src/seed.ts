@@ -27,6 +27,8 @@ async function main() {
       name: 'Jane Teacher',
       password: 'password123',
       role: 'TEACHER',
+      school: 'JKG Academy',
+      lastLoginAt: new Date(),
     },
   });
 
@@ -36,6 +38,8 @@ async function main() {
       name: 'John Director',
       password: 'password123',
       role: 'DIRECTOR',
+      school: 'JKG Academy',
+      lastLoginAt: new Date(),
     },
   });
 
@@ -45,6 +49,8 @@ async function main() {
       name: 'Alice Admin',
       password: 'password123',
       role: 'ADMIN',
+      school: 'JKG Academy',
+      lastLoginAt: new Date(),
     },
   });
 
@@ -54,8 +60,11 @@ async function main() {
   const lesson1 = await prisma.lesson.create({
     data: {
       title: 'Setting Clear Expectations',
+      topic: 'Classroom Management',
       description: 'Learn how to establish and communicate clear expectations in your classroom to foster a positive learning environment.',
       isMandatory: true,
+      isOptional: false,
+      status: 'PUBLISHED',
       order: 1,
       videoDuration: 0,
       units: {
@@ -183,8 +192,11 @@ async function main() {
   const lesson2 = await prisma.lesson.create({
     data: {
       title: 'Advanced Classroom Strategies',
+      topic: 'Classroom Management',
       description: 'Explore advanced strategies for managing complex classroom dynamics and engaging diverse learners.',
       isMandatory: false,
+      isOptional: true,
+      status: 'PUBLISHED',
       order: 2,
       videoDuration: 0,
       units: {

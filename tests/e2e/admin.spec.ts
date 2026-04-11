@@ -46,4 +46,45 @@ test.describe('Admin Panel', () => {
       expect(page.url()).toContain('/admin/lessons');
     }
   });
+
+  test('admin profile page loads', async ({ page }) => {
+    await page.goto('/admin/profile');
+    await page.waitForTimeout(2000);
+    await expect(page.getByRole('heading', { name: /admin profile/i })).toBeVisible();
+    await expect(page.getByText('Preferences')).toBeVisible();
+  });
+
+  test('new lesson wizard loads with Details tab active', async ({ page }) => {
+    await page.goto('/admin/lessons/new');
+    await page.waitForTimeout(2000);
+    await expect(page.getByRole('heading', { name: /create new lesson/i })).toBeVisible();
+    await expect(page.getByText('Details')).toBeVisible();
+    await expect(page.getByText('Video')).toBeVisible();
+    await expect(page.getByText('Quiz')).toBeVisible();
+    await expect(page.getByText(/lesson title/i)).toBeVisible();
+    await expect(page.getByText(/topic/i).first()).toBeVisible();
+  });
+
+  test('new lesson wizard can switch tabs', async ({ page }) => {
+    await page.goto('/admin/lessons/new');
+    await page.waitForTimeout(2000);
+    await page.getByRole('button', { name: 'Video' }).click();
+    await page.waitForTimeout(500);
+    await expect(page.getByText(/video source url/i)).toBeVisible();
+    await page.getByRole('button', { name: 'Quiz' }).click();
+    await page.waitForTimeout(500);
+    await expect(page.getByText(/quiz questions/i)).toBeVisible();
+  });
+
+  test('new user form loads with all fields', async ({ page }) => {
+    await page.goto('/admin/users/new');
+    await page.waitForTimeout(2000);
+    await expect(page.getByRole('heading', { name: /add new user/i })).toBeVisible();
+    await expect(page.getByPlaceholder(/enter full name/i)).toBeVisible();
+    await expect(page.getByPlaceholder(/email@example/i)).toBeVisible();
+    await expect(page.getByPlaceholder(/school name/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Teacher' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Director' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Admin', exact: true })).toBeVisible();
+  });
 });

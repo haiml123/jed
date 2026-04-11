@@ -16,7 +16,8 @@ test.describe('Teacher Home', () => {
   test('displays stat cards', async ({ page }) => {
     await expect(page.getByText('TOTAL XP')).toBeVisible();
     await expect(page.getByText('LESSONS COMPLETED')).toBeVisible();
-    await expect(page.getByText('AVG WEEKLY PROGRESS')).toBeVisible();
+    // Renamed per Figma designer note: formula = 40% XP + 40% lessons + 20% logins
+    await expect(page.getByText(/WEEKLY PROGRESS.*ENGAGEMENT/i)).toBeVisible();
   });
 
   test('displays continue where you left off section', async ({ page }) => {

@@ -22,11 +22,14 @@ export default function HomePage() {
   const [lessons, setLessons] = useState<any[]>([]);
   const [progress, setProgress] = useState<any[]>([]);
   const [xp, setXp] = useState(0);
+  const [engagement, setEngagement] = useState(0);
 
   useEffect(() => {
     api.lessons.list().then(setLessons).catch(console.error);
     api.progress.list().then(setProgress).catch(console.error);
     api.progress.xp().then((d) => setXp(d.totalXp)).catch(console.error);
+    // Per Figma designer note: weekly engagement = 40% XP + 40% lessons + 20% logins
+    api.progress.weeklyEngagement().then((d) => setEngagement(d.score)).catch(console.error);
   }, []);
 
   /* ---------- derived data ---------- */
@@ -60,8 +63,6 @@ export default function HomePage() {
 
   const userName =
     user?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Teacher';
-  const weeklyProgressPct =
-    totalUnits > 0 ? Math.round((completedUnits / totalUnits) * 100) : 0;
   const lessonProgressPct =
     totalUnits > 0 ? (completedUnits / totalUnits) * 100 : 0;
 
@@ -145,8 +146,8 @@ export default function HomePage() {
         />
 
         <StatCard
-          label="Avg Weekly Progress"
-          value={`${weeklyProgressPct}%`}
+          label="Weekly Progress/ Engagement"
+          value={`${engagement}%`}
           icon={<TrendingUp size={18} className="text-white" />}
           color="#2f6c00"
         />

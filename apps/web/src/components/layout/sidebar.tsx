@@ -24,6 +24,7 @@ const adminLinks = [
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/lessons', label: 'Lessons', icon: BookOpen },
   { href: '/admin/groups', label: 'Groups', icon: FolderOpen },
+  { href: '/admin/profile', label: 'Profile', icon: User },
 ];
 
 const ROLE_LABELS: Record<string, string> = {

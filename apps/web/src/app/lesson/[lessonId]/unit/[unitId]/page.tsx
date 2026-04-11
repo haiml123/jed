@@ -532,8 +532,17 @@ export default function LessonUnitPage() {
                         className="w-full h-28 p-3.5 rounded-card border border-border text-[13px] text-text resize-none focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none placeholder:text-muted transition-colors"
                       />
 
-                      {/* Checkbox for optional lessons */}
-                      {!lesson.isMandatory && (
+                      {/*
+                        Per Figma designer note:
+                        - Mandatory lessons: automatically shared with director (no checkbox)
+                        - Optional lessons: teacher opts in via this checkbox
+                      */}
+                      {lesson.isMandatory ? (
+                        <p className="mt-3 text-[11px] text-[#6b7280] flex items-center gap-1.5">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-green" />
+                          This reflection will be automatically shared with your director.
+                        </p>
+                      ) : (
                         <label className="flex items-center gap-2.5 mt-3 text-[12px] text-muted-dark cursor-pointer select-none">
                           <input
                             type="checkbox"

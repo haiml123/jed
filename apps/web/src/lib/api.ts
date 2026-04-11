@@ -36,6 +36,7 @@ export const api = {
   progress: {
     list: () => fetchApi('/progress'),
     xp: () => fetchApi('/progress/xp'),
+    weeklyEngagement: () => fetchApi('/progress/weekly-engagement'),
     updateVideo: (unitId: string, watchPercent: number) => fetchApi('/progress/video', { method: 'POST', body: JSON.stringify({ unitId, watchPercent }) }),
     submitExitTicket: (unitId: string, response: string, shareWithDirector?: boolean) => fetchApi('/progress/exit-ticket', { method: 'POST', body: JSON.stringify({ unitId, response, shareWithDirector }) }),
     submitQuiz: (unitId: string, answers: { questionId: string; optionId: string }[]) => fetchApi('/progress/quiz', { method: 'POST', body: JSON.stringify({ unitId, answers }) }),
@@ -45,6 +46,8 @@ export const api = {
     list: (role?: string) => fetchApi(`/users${role ? `?role=${role}` : ''}`),
     get: (id: string) => fetchApi(`/users/${id}`),
     progress: (id: string) => fetchApi(`/users/${id}/progress`),
+    create: (data: { name: string; email: string; school?: string; role?: string; password?: string }) =>
+      fetchApi('/users', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: string, data: any) => fetchApi(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: string) => fetchApi(`/users/${id}`, { method: 'DELETE' }),
   },

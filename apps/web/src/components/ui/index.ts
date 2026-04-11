@@ -5,3 +5,8 @@ export { default as Badge } from './badge';
 export { default as PawBackground } from './paw-background';
 export { default as SearchBar } from './search-bar';
 export { default as Modal } from './modal';
+export { default as TabNav } from './tab-nav';
+export type { TabNavItem } from './tab-nav';
+export { default as ConfirmBanner } from './confirm-banner';
+export { default as WizardShell } from './wizard-shell';
+export { default as FormField, TextInput, TextArea } from './form-field';

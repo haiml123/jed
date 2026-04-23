@@ -20,6 +20,13 @@ const config: Config = {
         card: '12px',
         panel: '20px',
       },
+      keyframes: {
+        fadeOut: {
+          '0%': { opacity: '0.9', transform: 'translateX(-50%) scale(0.9)' },
+          '20%': { opacity: '1', transform: 'translateX(-50%) scale(1)' },
+          '100%': { opacity: '0', transform: 'translateX(-50%) scale(1.1)' },
+        },
+      },
     },
   },
   plugins: [],

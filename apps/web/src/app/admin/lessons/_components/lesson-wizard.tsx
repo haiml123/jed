@@ -255,7 +255,11 @@ export default function LessonWizard({
             <VideoTab form={form} setForm={setForm} />
           )}
           {activeTab === 'quiz' && (
-            <QuizTab questions={questions} setQuestions={setQuestions} />
+            <QuizTab
+              form={form}
+              questions={questions}
+              setQuestions={setQuestions}
+            />
           )}
           {activeTab === 'teachers' && (
             <TeachersTab
@@ -403,12 +407,18 @@ function VideoTab({
 /* ================================================================== */
 
 function QuizTab({
+  form,
   questions,
   setQuestions,
 }: {
+  form: LessonFormState;
   questions: QuizQuestionDraft[];
   setQuestions: (q: QuizQuestionDraft[]) => void;
 }) {
+  const [numQuestions, setNumQuestions] = useState(5);
+  const [generating, setGenerating] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
   const updateQuestion = (idx: number, patch: Partial<QuizQuestionDraft>) => {
     setQuestions(questions.map((q, i) => (i === idx ? { ...q, ...patch } : q)));
   };
@@ -431,14 +441,65 @@ function QuizTab({
     updateQuestion(qIdx, { options: [...q.options, ''] });
   };
 
+  /**
+   * Generate quiz questions with OpenAI and append them to the current
+   * question list. Requires title + topic on the Details tab.
+   */
+  const canGenerate = form.title.trim().length > 0 && form.topic.trim().length > 0;
+
+  const handleGenerate = async () => {
+    if (!canGenerate || generating) return;
+    setGenerating(true);
+    setAiError(null);
+    try {
+      const res: {
+        questions: Array<{
+          text: string;
+          explanation: string;
+          options: Array<{ text: string; isCorrect: boolean }>;
+        }>;
+      } = await api.lessons.generateQuiz({
+        lessonTitle: form.title.trim(),
+        topic: form.topic.trim(),
+        description: form.description.trim() || undefined,
+        numQuestions,
+      });
+
+      const generated: QuizQuestionDraft[] = res.questions.map((q) => {
+        const correctIndex = Math.max(
+          0,
+          q.options.findIndex((o) => o.isCorrect),
+        );
+        return {
+          id: Math.random().toString(36).slice(2),
+          text: q.text,
+          correctIndex,
+          options: q.options.map((o) => o.text),
+        };
+      });
+
+      // Append to existing questions, dropping any empty manually-added cards
+      const keep = questions.filter(
+        (q) => q.text.trim().length > 0 || q.options.some((o) => o.trim().length > 0),
+      );
+      setQuestions([...keep, ...generated]);
+    } catch (e: any) {
+      setAiError(
+        e?.message || 'Failed to generate questions. Try again in a moment.',
+      );
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h3 className="text-base font-bold text-[#181c21]">
           Quiz Questions ({questions.length})
         </h3>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
             onClick={addQuestion}
@@ -447,15 +508,58 @@ function QuizTab({
             <Plus size={14} />
             Add Manually
           </button>
+
+          {/* Number of questions input */}
+          <div className="flex items-center gap-1.5 bg-white border border-[#e5e7eb] rounded-full px-3 py-1.5">
+            <label htmlFor="num-q" className="text-[10px] font-semibold text-[#707882] uppercase tracking-wider">
+              Count
+            </label>
+            <input
+              id="num-q"
+              type="number"
+              min={1}
+              max={10}
+              value={numQuestions}
+              onChange={(e) => {
+                const n = Number(e.target.value);
+                if (Number.isFinite(n)) setNumQuestions(Math.max(1, Math.min(10, n)));
+              }}
+              className="w-10 text-xs font-bold text-[#181c21] bg-transparent outline-none text-center"
+            />
+          </div>
+
           <button
             type="button"
-            className="flex items-center gap-1.5 text-xs font-bold text-white bg-[#982d94] hover:bg-[#7c2379] px-4 py-2 rounded-full transition-colors"
+            onClick={handleGenerate}
+            disabled={!canGenerate || generating}
+            title={
+              !canGenerate
+                ? 'Add a title and topic on the Details tab first'
+                : 'Generate multiple-choice questions with AI'
+            }
+            className="flex items-center gap-1.5 text-xs font-bold text-white bg-[#982d94] hover:bg-[#7c2379] disabled:bg-[#d7bdd5] disabled:cursor-not-allowed px-4 py-2 rounded-full transition-colors"
           >
-            <Sparkles size={14} />
-            Generate with AI
+            {generating ? (
+              <>
+                <span className="inline-block w-3 h-3 rounded-full border-2 border-white/60 border-t-white animate-spin" />
+                Generating…
+              </>
+            ) : (
+              <>
+                <Sparkles size={14} />
+                Generate with AI
+              </>
+            )}
           </button>
         </div>
       </div>
+
+      {/* Inline error */}
+      {aiError && (
+        <div className="bg-[#fef2f2] border border-[#fecaca] rounded-[14px] px-4 py-3 text-xs font-medium text-[#991b1b]">
+          {aiError}
+        </div>
+      )}
 
       {/* Question cards */}
       <div className="space-y-4">

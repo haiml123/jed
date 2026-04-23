@@ -14,6 +14,10 @@ export default function ProfilePage() {
   const [progress, setProgress] = useState<any[]>([]);
   const [lessons, setLessons] = useState<any[]>([]);
   const [emailNotifications, setEmailNotifications] = useState(true);
+  // Per Figma Apr 22 update (node 538:2614): floating language menu with
+  // English + Hebrew options. Clicking the button toggles the menu.
+  const [language, setLanguage] = useState<'English' | 'Hebrew'>('English');
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
 
   useEffect(() => {
     api.progress.xp().then(d => setXp(d.totalXp)).catch(console.error);
@@ -100,9 +104,36 @@ export default function ProfilePage() {
                   <p className="text-[10.5px] text-[#9ca3af]">Choose your preferred language</p>
                 </div>
               </div>
-              <button className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 text-[11px] font-semibold text-[#374151]">
-                English <ChevronDown size={9} />
-              </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setLangMenuOpen((o) => !o)}
+                  className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 text-[11px] font-semibold text-[#374151] hover:border-[#00609b] transition-colors"
+                >
+                  {language} <ChevronDown size={9} />
+                </button>
+                {langMenuOpen && (
+                  <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden w-[130px] z-10">
+                    {(['English', 'Hebrew'] as const).map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => {
+                          setLanguage(opt);
+                          setLangMenuOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-[12px] transition-colors ${
+                          language === opt
+                            ? 'bg-[#00609b] text-white font-semibold'
+                            : 'text-[#374151] hover:bg-[#f3f4f6]'
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Change Password */}

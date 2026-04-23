@@ -102,9 +102,11 @@ export default function HomePage() {
 
         {/* Right: mascot + speech bubble */}
         <div className="flex-shrink-0 z-10 flex flex-col items-end gap-2 mr-2">
+          {/* Per Figma Apr 22 update (node 558:3201): new real-photo
+              "JED the Dog" mascot replaces the cartoon. */}
           <Image
-            src="/assets/home/jed-mascot.png"
-            alt="JED Mascot"
+            src="/assets/home/jed-dog-photo.png"
+            alt="JED the Dog"
             width={176}
             height={176}
             className="rounded-full"
@@ -186,7 +188,7 @@ export default function HomePage() {
                   Due in 3 days
                 </span>
                 {currentLesson.isMandatory && (
-                  <Badge variant="mandatory">MANDATORY</Badge>
+                  <Badge variant="core">Core</Badge>
                 )}
               </div>
 

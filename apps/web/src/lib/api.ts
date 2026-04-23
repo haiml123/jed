@@ -32,6 +32,8 @@ export const api = {
     delete: (id: string) => fetchApi(`/lessons/${id}`, { method: 'DELETE' }),
     createUnit: (data: any) => fetchApi('/lessons/units', { method: 'POST', body: JSON.stringify(data) }),
     createQuestion: (data: any) => fetchApi('/lessons/quiz-questions', { method: 'POST', body: JSON.stringify(data) }),
+    generateQuiz: (data: { lessonTitle: string; topic: string; description?: string; numQuestions: number }) =>
+      fetchApi('/lessons/quiz/generate', { method: 'POST', body: JSON.stringify(data) }),
   },
   progress: {
     list: () => fetchApi('/progress'),

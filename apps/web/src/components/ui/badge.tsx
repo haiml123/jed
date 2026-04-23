@@ -1,10 +1,13 @@
 'use client';
 
-type BadgeVariant = 'required' | 'optional' | 'mandatory' | 'locked' | 'active' | 'draft' | 'inProgress' | 'completed' | 'director' | 'admin' | 'teacher';
+type BadgeVariant = 'required' | 'optional' | 'mandatory' | 'core' | 'locked' | 'active' | 'draft' | 'inProgress' | 'completed' | 'director' | 'admin' | 'teacher';
 
 const VARIANTS: Record<BadgeVariant, { bg: string; text: string }> = {
   required: { bg: '#dc2626', text: '#ffffff' },
   mandatory: { bg: '#d0e4ff', text: '#004a79' },
+  // Per Figma Apr 22 update: renamed mandatory label to "Core" on the
+  // home "Continue where you left off" card. Same palette as `mandatory`.
+  core: { bg: '#d0e4ff', text: '#004a79' },
   optional: { bg: '#f3e8ff', text: '#982d94' },
   locked: { bg: '#e5e7eb', text: '#707882' },
   active: { bg: '#dcfce7', text: '#166534' },

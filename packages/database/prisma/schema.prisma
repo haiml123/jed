@@ -89,11 +89,12 @@ model KeyTakeaway {
 }
 
 model QuizQuestion {
-  id      String @id @default(cuid())
-  text    String
-  order   Int    @default(0)
-  unitId  String
-  xpValue Int    @default(10)
+  id          String  @id @default(cuid())
+  text        String
+  explanation String? // Used to show "why" feedback on wrong/right answers
+  order       Int     @default(0)
+  unitId      String
+  xpValue     Int     @default(10)
 
   unit    Unit         @relation(fields: [unitId], references: [id], onDelete: Cascade)
   options QuizOption[]

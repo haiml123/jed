@@ -740,8 +740,19 @@ export default function LessonUnitPage() {
            STEP: COMPLETE
            ═══════════════════════════════════════════ */}
         {step === 'complete' && (
-          <div className="px-6 py-10 max-w-[580px] mx-auto">
-            <div className="text-center mb-8">
+          <div className="px-6 py-10 max-w-[580px] mx-auto relative">
+            {/* Confetti overlay — per Figma Apr 22 update (node 552:2998).
+                Rendered absolutely so it doesn't affect layout, fades out
+                after the initial appearance. */}
+            <Image
+              src="/assets/home/confetti.png"
+              alt=""
+              width={520}
+              height={520}
+              aria-hidden
+              className="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none opacity-80 animate-[fadeOut_2.5s_ease-out_forwards]"
+            />
+            <div className="text-center mb-8 relative">
               <h1 className="font-heading text-[26px] font-bold text-text-dark">
                 Lesson Complete
               </h1>
